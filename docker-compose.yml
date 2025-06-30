@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    command: npm run dev:all
+    depends_on:
+      - model-runner
+    environment:
+      VITE_API_URL: http://model-runner:7999
+
+  model-runner:
+    image: docker/model-runner
+    ports:
+      - "7999:7999"
+    volumes:
+      - model-cache:/root/.cache/docker-model-runner
+    environment:
+      MODEL: ai/phi4:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  model-cache:

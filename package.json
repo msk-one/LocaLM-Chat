@@ -1,0 +1,98 @@
+{
+  "name": "localm-chat",
+  "version": "0.6.0",
+  "private": true,
+  "main": "electron/main.js",
+  "homepage": "./",
+  "scripts": {
+    "dev": "vite",
+    "proxy:dev": "nodemon --watch proxy proxy/server.js",
+    "dev:all": "concurrently \"npm run dev\" \"npm run proxy:dev\"",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron:dev": "npm run build && electron .",
+    "electron:build": "npm run build && electron-builder",
+    "postinstall": "electron-builder install-app-deps",
+    "test": "vitest",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "format": "prettier --write src",
+    "type-check": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@langchain/core": "^0.2.0",
+    "@tailwindcss/typography": "^0.5.12",
+    "autoprefixer": "^10.4.19",
+    "dompurify": "^3.0.5",
+    "highlight.js": "^11.9.0",
+    "langchain": "^0.2.0",
+    "marked": "^12.0.0",
+    "pinia": "^2.1.7",
+    "systeminformation": "^5.21.22",
+    "tailwindcss": "^3.4.1",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.43.1",
+    "@types/dompurify": "^3.0.5",
+    "@types/node": "^20.11.5",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "@vue/eslint-config-typescript": "^12.0.0",
+    "@vue/tsconfig": "^0.5.0",
+    "concurrently": "^8.2.2",
+    "electron": "^30.0.0",
+    "electron-builder": "^25.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.23.0",
+    "mammoth": "^1.4.24",
+    "nodemon": "^3.1.0",
+    "pdfjs-dist": "^4.0.379",
+    "postcss": "^8.4.35",
+    "prettier": "^3.2.5",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vitest": "^1.4.0",
+    "vue-tsc": "^2.0.0"
+  },
+  "build": {
+    "appId": "com.localmchat.app",
+    "productName": "LocaLM Chat 0.6",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "node_modules/**/*",
+      "!node_modules/.cache/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "public/logo.png",
+        "to": "logo.png"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": {
+        "target": "dmg",
+        "arch": ["arm64"]
+      },
+      "icon": "public/logo.png"
+    },
+    "win": {
+      "target": {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
+      "icon": "public/logo.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
