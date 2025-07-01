@@ -41,6 +41,8 @@ playwright/.cache/
 
 # Local helper / playground artefacts
 CLAUDE.md
+GEMINI.md
+package-lock.json
 create-test-pdf.js
 test-proxy.js
 test-file-upload.html

@@ -73,6 +73,10 @@
       {
         "from": "public/logo.png",
         "to": "logo.png"
+      },
+      {
+        "from": "electron/install-docker.ps1",
+        "to": "install-docker.ps1"
       }
     ],
     "mac": {

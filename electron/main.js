@@ -3,6 +3,7 @@ const path = require('path');
 const { createTray } = require('./trayManager');
 const { handleErrors } = require('./errorHandler');
 const { checkHardware } = require('./hardwareCheck');
+const { installDocker } = require('./install-docker.js');
 
 let mainWindow;
 let tray = null;
@@ -81,6 +82,7 @@ app.whenReady().then(async () => {
 
     // Create app window
     createWindow();
+    installDocker();
     
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) createWindow();
