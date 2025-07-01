@@ -38,35 +38,36 @@ interface HtmlBlock {
 
 type ContentBlock = CodeBlock | HtmlBlock;
 
+// Custom renderer that extracts code blocks for separate handling
+const renderer = new marked.Renderer();
+let codeBlocks: Array<{ code: string; language: string; placeholder: string }> = [];
+
+renderer.code = function(code: string, language: string | undefined) {
+  const lang = language || '';
+  const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
+  codeBlocks.push({ code, language: lang, placeholder });
+  return placeholder;
+};
+
+marked.setOptions({
+  renderer,
+  breaks: true,
+  gfm: true
+});
+
 const parsedBlocks = computed(() => {
-  // This local array will store code blocks for the current render pass.
-  const localCodeBlocks: Array<{ code:string; language: string; placeholder: string }> = [];
-  const renderer = new marked.Renderer();
-
-  // Custom renderer that extracts code blocks for separate handling
-  renderer.code = function(code: string, language: string | undefined) {
-    const lang = language || '';
-    const placeholder = `__CODE_BLOCK_${localCodeBlocks.length}__`;
-    localCodeBlocks.push({ code, language: lang, placeholder });
-    return placeholder;
-  };
-
-  // Use a local marked instance to avoid global state modification
-  const localMarked = new marked.Marked({
-    renderer,
-    breaks: true,
-    gfm: true,
-  });
-
+  // Reset code blocks for each render
+  codeBlocks = [];
+  
   try {
-    const html = localMarked.parse(props.content) as string;
+    const html = marked.parse(props.content) as string;
     const sanitizedHtml = sanitizeMarkdown(html);
     
     const blocks: ContentBlock[] = [];
     let currentHtml = sanitizedHtml;
     
     // Replace code block placeholders with actual CodeBlock components
-    localCodeBlocks.forEach((codeBlock) => {
+    codeBlocks.forEach((codeBlock) => {
       const parts = currentHtml.split(codeBlock.placeholder);
       
       if (parts.length > 1) {
